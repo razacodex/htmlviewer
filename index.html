@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Love HTML Previewer</title>
+
+<style>
+:root{
+    --primary:#3568f5;
+    --primary-light:#edf3ff;
+    --green-light:
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,
+    "Segoe UI",sans-serif;
+    background:#f5f7fb;
+    color:#172033;
+    overflow:hidden;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+    background:#172033fff;
+    border-bottom:1px solid #000000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.logo{
+    width:58px;
+    height:58px;
+
+    display:grid;
+    place-items:center;
+
+    border-radius:18px;
+    overflow:hidden;
+
+    background:#f7f9fc;
+    border:1px solid #e5e9f2;
+}
+
+.logo img{
+    width:100%;
+    height:100%;
+
+    display:block;
+
+    object-fit:contain;
+}
+
+.brand h1{
+    font-size:19px;
+    font-weight:850;
+}
+
+.brand span{
+    display:block;
+    font-size:10px;
+    color:#748095;
+    margin-top:2px;
+}
+
+/* ================= BUTTON ================= */
+
+.preview-btn,
+.code-btn{
+    border:0;
+    padding:11px 18px;
+    border-radius:12px;
+    color:#ffffff;
+    font-weight:800;
+    cursor:pointer;
+    font-size:14px;
+    transition:.2s;
+}
+
+.preview-btn{
+    background:linear-gradient(135deg,#ff2d75,#ff4f91);
+    box-shadow:0 8px 25px #ff2d7535;
+}
+
+.code-btn{
+    background:#f3f6fa;
+    border:1px solid #dfe5ee;
+}
+
+.preview-btn:hover,
+.code-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    height:calc(100vh - 70px);
+    position:relative;
+}
+
+/* ================= EDITOR ================= */
+
+.author-badge {
+    display: flex;             /* inline-flex की जगह flex से सेंटर करना आसान होता है */
+    align-items: center;       /* वर्टिकल (ऊपर-नीचे) सेंटर के लिए */
+    justify-content: center;   /* हॉरिजॉन्टल (दाएं-बाएं) टेक्स्ट/आइकन को सेंटर करने के लिए */
+    
+    /* बैकग्राउंड और बॉर्डर */
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid rgba(79, 70, 229, 0.2);
+    
+    /* टेक्स्ट स्टाइलिंग */
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;     /* टेक्स्ट को और साफ दिखाने के लिए */
+    
+    /* स्पेसिंग और परफेक्ट सेंटर */
+    padding: 6px 16px;         /* बैज को परफेक्ट शेप देने के लिए अंदरूनी स्पेस */
+    border-radius: 20px;
+    margin: 20px auto;         /* 'auto' बाएं और दाएं से इसे स्क्रीन के बिल्कुल बीच में लाएगा */
+    width: fit-content;        /* बैज की चौड़ाई सिर्फ टेक्स्ट जितनी ही रखेगा */
+}
+
+
+.editor{
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+
+.editor-top{
+    height:48px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 16px;
+    background:#f8faff;
+    border-bottom:1px solid #5C0500;
+    border-top:1px solid #5C0500;
+}
+
+.file-name {
+    color: #596579;
+    font-size: 13px;
+    font-weight: 700;
+    
+    /* नए जुड़े हुए स्टाइल्स */
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid rgba(79, 70, 229, 0.2);    /* हल्का प्रोफेशनल बॉर्डर */
+    border-radius: 6px;              /* कोनों को गोल (Round) करने के लिए */
+    padding: 4px 10px;               /* बॉर्डर और नाम के बीच परफेक्ट स्पेस */
+    display: inline-block;           /* ताकि बॉर्डर सिर्फ नाम के आकार का बने */
+}
+
+
+.status{
+    color:#15945a;
+    font-size:12px;
+    background: var(--green-light);
+    border: 1px solid rgba(79, 70, 229, 0.2); 
+    border-radius: 6px;         
+    padding: 4px 10px; 
+    display: inline-block;
+}
+
+/* ================= CODE AREA ================= */
+
+.code-wrapper{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+    background:#fbfcff;
+}
+
+textarea{
+    width:100%;
+    height:100%;
+    resize:none;
+    outline:none;
+    border:0;
+
+    padding:22px;
+
+    background:#fbfcff;
+    color:#202a3b;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size:14px;
+    line-height:1.7;
+
+    tab-size:4;
+
+    white-space:pre;
+    overflow:auto;
+}
+
+/* ================= PREVIEW ================= */
+
+.preview{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:none;
+
+    width:100vw;
+    height:100dvh;
+
+    background:#172033;
+}
+
+iframe{
+    display:block;
+    width:100%;
+    height:100%;
+    border:0;
+    background:#172033;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+    .header{
+        height:62px;
+        padding:0 12px;
+    }
+
+    .main{
+        height:calc(100vh - 62px);
+    }
+
+    .brand h1{
+        font-size:16px;
+    }
+
+    .brand span{
+        display:none;
+    }
+
+    .logo{
+        width:38px;
+        height:38px;
+        border-radius:11px;
+    }
+
+    .preview-btn,
+    .code-btn{
+        padding:9px 12px;
+        font-size:12px;
+    }
+
+    textarea{
+        padding:16px;
+        font-size:13px;
+        line-height:1.65;
+    }
+
+}
+
+/* ================= SCROLLBAR ================= */
+
+textarea::-webkit-scrollbar{
+    width:9px;
+    height:9px;
+}
+
+textarea::-webkit-scrollbar-track{
+    background:#f5f7fb;
+}
+
+textarea::-webkit-scrollbar-thumb{
+    background:#cbd3df;
+    border-radius:20px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover{
+    background:#b8c2d1;
+}
+</style>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#172033">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <div class="logo">
+    <img src="livehtml.png" alt="Logo">
+</div>
+
+        <div>
+            <h1>Live HTML Previewer</h1>
+            <span>Write HTML • Preview Instantly</span>
+        </div>
+
+    </div>
+
+    <button
+        class="preview-btn"
+        id="previewButton"
+        onclick="showPreview()">
+
+        👁️ Live Preview
+
+    </button>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- ================= CODE EDITOR ================= -->
+
+    <section class="editor" id="editor">
+        
+        <div class="author-badge">✨ Created by Mushahid Raza</div>
+        
+
+        <div class="editor-top">
+            
+            
+
+            <div class="file-name">
+                📄 index.html
+            </div>
+
+            <div class="status">
+                ● Ready
+            </div>
+
+        </div>
+
+        <div class="code-wrapper">
+
+<textarea id="code" spellcheck="false"><!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>My Love Page</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-family:Arial,sans-serif;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff2d75,
+        #ff6b9a,
+        #ff9fbf
+    );
+
+    color:white;
+}
+
+.card{
+    width:min(90%,500px);
+
+    padding:40px 25px;
+
+    text-align:center;
+
+    background:#ffffff20;
+
+    border:1px solid #ffffff40;
+
+    border-radius:30px;
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:
+    0 30px 70px #0004;
+}
+
+.heart{
+    font-size:80px;
+
+    animation:
+    beat 1s infinite;
+}
+
+h1{
+    font-size:40px;
+    margin:15px 0;
+}
+
+p{
+    font-size:18px;
+    line-height:1.6;
+}
+
+button{
+    margin-top:20px;
+
+    padding:14px 25px;
+
+    border:0;
+    border-radius:50px;
+
+    background:white;
+    color:#ff2d75;
+
+    font-weight:bold;
+    font-size:16px;
+
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+@keyframes beat{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.2);
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="heart">
+        ❤️
+    </div>
+
+    <h1>Hello Love!</h1>
+
+    <p>
+        Ye tumhara HTML live preview hai.
+        Code ko edit karo aur preview button
+        dabakar apni website dekho.
+    </p>
+
+    <button onclick="alert('I Love HTML ❤️')">
+        Click Me ❤️
+    </button>
+
+</div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html></textarea>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PREVIEW ================= -->
+
+    <section class="preview" id="preview">
+
+        <iframe
+            id="previewFrame"
+            sandbox="allow-scripts allow-forms">
+        </iframe>
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* ================= ELEMENTS ================= */
+
+const editor =
+    document.getElementById("editor");
+
+const preview =
+    document.getElementById("preview");
+
+const code =
+    document.getElementById("code");
+
+const frame =
+    document.getElementById("previewFrame");
+
+
+/* ================= SHOW PREVIEW ================= */
+
+function showPreview(){
+
+    /*
+       Preview ko actual full-screen layer banaya gaya hai.
+       Header, nav aur koi close/back button preview ke andar
+       nahi dikhaya jayega.
+    */
+
+    frame.srcdoc = code.value;
+
+    editor.style.display = "none";
+    preview.style.display = "block";
+
+    // Phone/browser back button se editor par wapas aane ke liye
+    history.pushState({preview:true}, "");
+}
+
+
+/* ================= SHOW CODE ================= */
+
+function showCode(){
+
+    preview.style.display = "none";
+    editor.style.display = "flex";
+
+}
+
+
+/* ================= TAB SUPPORT ================= */
+
+code.addEventListener("keydown",function(e){
+
+    if(e.key === "Tab"){
+
+        e.preventDefault();
+
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+
+        this.value =
+            this.value.substring(0,start)
+            + "    "
+            + this.value.substring(end);
+
+        this.selectionStart =
+            this.selectionEnd =
+            start + 4;
+
+    }
+
+});
+
+
+/* ================= CTRL + ENTER ================= */
+
+code.addEventListener("keydown",function(e){
+
+    if(
+        (e.ctrlKey || e.metaKey)
+        &&
+        e.key === "Enter"
+    ){
+
+        e.preventDefault();
+
+        showPreview();
+
+    }
+
+});
+
+
+/* ================= PHONE BACK BUTTON ================= */
+
+window.addEventListener("popstate",function(){
+
+    if(preview.style.display === "block"){
+
+        showCode();
+
+    }
+
+});
+
+
+/* ================= ESC ================= */
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key === "Escape"){
+
+        if(preview.style.display === "block"){
+
+            history.back();
+
+        }
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
